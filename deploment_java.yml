@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: hello-java
+  namespace: amsdev
+spec:
+  selector:
+    matchlabels:
+      app: hello-java
+template: 
+  metadata: 
+    labels:
+    app: hello-java
+   spec:
+    container: 
+    - name: hello-java
+      image:  fptamsdevacr.azurecr.io/java:latest
+      ports:
+      - containerPort: 5000
+      resources:
+        limits:
+          cpu: '1'
+          memory: 1Gi
+        request:
+          cpu: 500m
+          memory:  500Mi 
+    replicas: 2
+

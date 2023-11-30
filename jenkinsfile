@@ -5,8 +5,9 @@ pipeline {
         FPT_ACR_CREDENTIALS = credentials('FPT-AMS-ACR-CREDENTALS')
         FPT_ACR_URL = "fptamsdevacr.azurecr.io"
         FPT_ACR_NAME = "fptamsdevacr"
-        COMMIT_HASH = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+        COMMIT_HASH = sh(script: 'git rev-parse --short  HEAD', returnStdout: true).trim()
         SERVICE_NAME = "java"
+        AKS_CLUSTER_NAME = "fpt-ams-dev"
 
     }
 
@@ -18,13 +19,23 @@ pipeline {
         }
         stage("build image") {
             steps {
-                sh "docker build -t $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ." 
+                sh "docker build -t $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
+                sh "docker tag $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER $FPT_ACR_URL/$SERVICE_NAME:latest" 
             }
         }
 
         stage("push Image") {
             steps {
                 sh "docker push $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER"
+                script {
+         try {
+             sh 'az acr repository delete --name $FPT_ACR_URL --image $SERVICE_NAME:latest -y'
+         } catch (Exception e) {
+             println "ACR remove execution FAILED: ${e.getMessage()} --> SKIP Remove ACR"
+             currentBuild.result = 'SUCCESS'
+         }
+      }
+                sh "docker push $FPT_ACR_URL/$SERVICE_NAME:latest"
                 //sh "docker stop getting"
                 
             }
@@ -36,6 +47,12 @@ pipeline {
                 //sh"az acr repository list --name $FPT_ACR_NAME --output table"
                 //sh "docker stop getting"
                 
+            }
+        }
+        stage("Deploy to aks") {
+            steps {
+                sh('kubectl config use-context $AKS_CLUSTER_NAME')
+                sh('kubectl apply -f deployment_java.yml')
             }
         }
 }
