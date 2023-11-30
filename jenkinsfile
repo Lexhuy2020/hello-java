@@ -1,18 +1,39 @@
 pipeline {
     agent any
 
+    enviroment {
+        FPT_ACR_CREDENTIALS = credentials('FPT-AMS-ACR-CREDENTALS')
+        FPT_ACR_URL = "fptamsdevacr.azurecr.io"
+        FPT_ACR_NAME = "fptamsdevacr"
+        COMMIT_HASH = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+        SERVICE_NAME = "java"
+
+    }
 
     stages {
-        stage("build image run image HUy") {
+        stage("login ACR") {
             steps {
-                sh "docker build -t hello-java:001 -f Dockerfile ." 
-                sh "docker run --name hello-java -d -p 5000:5000 hello-java:001"
+                sh "docker login $FPT_ACR_URL -u $FPT_ACR_CREDENTIALS -p $FPT_ACR_CREDENTIALS "
+            }
+        }
+        stage("build image") {
+            steps {
+                sh "docker build -t $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_{$BUILD_NUMBER} -f Dockerfile ." 
             }
         }
 
-        stage("view container") {
+        stage("push Image") {
             steps {
-                sh "docker ps"
+                sh "docker push $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_{$BUILD_NUMBER}"
+                //sh "docker stop getting"
+                
+            }
+        }
+         stage("check images pushed") {
+            steps {
+                //show tag of repository name in ACR
+                sh"az acr repository show-tags --name $FPT_ACR_NAME --repository $SERVICE_NAME --output table"
+                //sh"az acr repository list --name $FPT_ACR_NAME --output table"
                 //sh "docker stop getting"
                 
             }
@@ -21,7 +42,7 @@ pipeline {
       
             post {
                 always {
-                  
+                   sh 'docker rmi $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_{$BUILD_NUMBER} '
                    sh 'docker images'
                  
                 }
