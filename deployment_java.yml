@@ -1,29 +1,49 @@
+# apiVersion: apps/v1
+# kind: Deployment
+
+# metadata:
+#   name: hello-java
+#   namespace: test
+# spec:
+#   selector:
+#     matchlabels:
+#       app: hello-java
+# template: 
+#   metadata: 
+#     labels:
+#       app: hello-java
+#    spec:
+#     container: 
+#     - name: hello-java
+#       image:  fptamsdevacr.azurecr.io/java:latest
+#       ports:
+#       - containerPort: 5000
+#       resources:
+#         limits:
+#           cpu: '1'
+#           memory: 1Gi
+#         request:
+#           cpu: 500m
+#           memory:  500Mi 
+#     replicas: 2
+
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
-  name: hello-java
+  name: java-deployment
   namespace: test
 spec:
+  replicas: 3
   selector:
-    matchlabels:
-      app: hello-java
-template: 
-  metadata: 
-    labels:
-      app: hello-java
-   spec:
-    container: 
-    - name: hello-java
-      image:  fptamsdevacr.azurecr.io/java:latest
-      ports:
-      - containerPort: 5000
-      resources:
-        limits:
-          cpu: '1'
-          memory: 1Gi
-        request:
-          cpu: 500m
-          memory:  500Mi 
-    replicas: 2
-
+    matchLabels:
+      app: java
+  template:
+    metadata:
+      labels:
+        app: java
+    spec:
+      containers:
+      - name: java
+        image: fptamsdevacr.azurecr.io/java:latest
+        ports:
+        - containerPort: 5000
