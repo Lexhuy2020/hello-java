@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage("login ACR") {
             steps {
-                sh "docker login $FPT_ACR_URL -u $FPT_ACR_CREDENTIALS -p $FPT_ACR_CREDENTIALS "
+                sh "docker login $FPT_ACR_URL -u $FPT_ACR_CREDENTIALS_USR -p $FPT_ACR_CREDENTIALS_PSW "
             }
         }
         stage("build image") {
