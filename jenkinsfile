@@ -18,13 +18,13 @@ pipeline {
         }
         stage("build image") {
             steps {
-                sh "docker build -t $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_{$BUILD_NUMBER} -f Dockerfile ." 
+                sh "docker build -t $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ." 
             }
         }
 
         stage("push Image") {
             steps {
-                sh "docker push $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_{$BUILD_NUMBER}"
+                sh "docker push $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER"
                 //sh "docker stop getting"
                 
             }
@@ -42,7 +42,7 @@ pipeline {
       
             post {
                 always {
-                   sh 'docker rmi $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_{$BUILD_NUMBER} '
+                   sh 'docker rmi $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER '
                    sh 'docker images'
                  
                 }
