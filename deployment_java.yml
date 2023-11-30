@@ -3,7 +3,7 @@ kind: Deployment
 
 metadata:
   name: hello-java
-  namespace: amsdev
+  namespace: test
 spec:
   selector:
     matchlabels:
@@ -11,7 +11,7 @@ spec:
 template: 
   metadata: 
     labels:
-    app: hello-java
+      app: hello-java
    spec:
     container: 
     - name: hello-java
