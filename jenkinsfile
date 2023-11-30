@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+
+    stages {
+        stage("build image run image HUy") {
+            steps {
+                sh "docker build -t hello-java:001 -f Dockerfile ." 
+                sh "docker run --name hello-java -d -p 5000:5000 hello-java:001"
+            }
+        }
+
+        stage("view container") {
+            steps {
+                sh "docker ps"
+                //sh "docker stop getting"
+                
+            }
+        }
+}
+      
+            post {
+                always {
+                  
+                   sh 'docker images'
+                 
+                }
+            }
+        
+}
