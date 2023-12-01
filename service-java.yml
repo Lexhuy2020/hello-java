@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Service
 metadata:
-  name: service-javaApp
+  name: service-java-app
   namespace: test
 spec:
   type: LoadBalancer
@@ -9,4 +9,4 @@ spec:
     - port: 80
       targetPort: 5000
   selector:
-    app: javaApp
+    app: java-app
