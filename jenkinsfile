@@ -53,6 +53,7 @@ pipeline {
             steps {
                 sh('kubectl config use-context $AKS_CLUSTER_NAME')
                 sh('kubectl apply -f deployment_java.yml')
+                sh('kubectl apply -f service-java.yml')
             }
         }
 }

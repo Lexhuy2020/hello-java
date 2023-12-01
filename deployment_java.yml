@@ -30,20 +30,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: java-deployment
+  name: javaApp
   namespace: test
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: java
+      app: javaApp
   template:
     metadata:
       labels:
-        app: java
+        app: javaApp
     spec:
       containers:
-      - name: java
+      - name: javaApp
         image: fptamsdevacr.azurecr.io/java:latest
         ports:
         - containerPort: 5000
