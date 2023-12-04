@@ -17,38 +17,37 @@ pipeline {
         //         sh "docker login $FPT_ACR_URL -u $FPT_ACR_CREDENTIALS_USR -p $FPT_ACR_CREDENTIALS_PSW "
         //     }
         // }
-        // stage("build image") {
-        //     steps {
-        //         sh "docker build -t $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
-        //         sh "docker tag $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER $FPT_ACR_URL/$SERVICE_NAME:latest" 
-        //     }
-        // }
-         stage('login ECR and push image') {
+        stage("build image") {
+            steps {
+                sh "docker build -t $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
+                sh "docker tag $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER $FPT_ACR_URL/$SERVICE_NAME:latest" 
+            }
+        }
+         stage('login ECR') {
             steps {
                 script{
                     // cleanup current user docker credentials
                     //sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
 
-                sh "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $FPT_ACR_URL"
-                 sh "docker push $FPT_ACR_URL/$SERVICE_NAME:latest"
+                sh "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $FPT_ACR_URL"   
                 }
             }
          }
 
-    //     stage("push Image") {
-    //         steps {
-    //             sh "docker push $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER"
-    //             script {
-    //      try {
-    //          sh 'az acr repository delete --name $FPT_ACR_URL --image $SERVICE_NAME:latest -y'
-    //      } catch (Exception e) {
-    //          println "ACR remove execution FAILED: ${e.getMessage()} --> SKIP Remove ACR"
-    //          currentBuild.result = 'SUCCESS'
-    //      }
-    //   }
-    //             sh "docker push $FPT_ACR_URL/$SERVICE_NAME:latest"             
-    //         }
-    //     }
+        stage("push Image") {
+            steps {
+                sh "docker push $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER"
+                script {
+         try {
+             sh 'aws ecr batch-delete-image --repository-name testecr --image-ids imageTag=latest -y'
+         } catch (Exception e) {
+             println "ACR remove execution FAILED: ${e.getMessage()} --> SKIP Remove ACR"
+             currentBuild.result = 'SUCCESS'
+         }
+      }
+                sh "docker push $FPT_ACR_URL/$SERVICE_NAME:latest"             
+            }
+        }
         //  stage("check images pushed") {
         //     steps {
         //         //show tag of repository name in ACR
@@ -68,8 +67,7 @@ pipeline {
             post {
                 always {
                    sh 'docker rmi $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER'
-                   sh 'docker images'
-                 
+                   sh 'docker images'               
                 }
             }
         
