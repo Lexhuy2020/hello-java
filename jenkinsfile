@@ -5,6 +5,7 @@ pipeline {
         FPT_ACR_CREDENTIALS = ECR-ACCESS-KEY
         FPT_ACR_URL = "563958919552.dkr.ecr.ap-northeast-2.amazonaws.com/testecr"
         FPT_ACR_NAME = "testecr"
+        REGION = "ap-northeast-2"
         COMMIT_HASH = sh(script: 'git rev-parse --short  HEAD', returnStdout: true).trim()
         SERVICE_NAME = "java"
         AKS_CLUSTER_NAME = "fpt-ams-dev"
@@ -30,7 +31,7 @@ pipeline {
                     sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
                     
                    
-                    docker.withRegistry("https://$FPT_ACR_URL", "ecr:"ap-northeast-2":${FPT_ACR_CREDENTIALS}") {
+                    docker.withRegistry("https://$FPT_ACR_URL", "ecr:${REGION}:${FPT_ACR_CREDENTIALS}") {
                       docker.image("$FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER ").push()
                       docker.image("$FPT_ACR_URL/$SERVICE_NAME:latest").push()
                     }
