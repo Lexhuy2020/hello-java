@@ -28,11 +28,11 @@ pipeline {
             steps {
                 script{
                     // cleanup current user docker credentials
-                    sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
+                    //sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
                     
                    
-                    docker.withRegistry("https://$FPT_ACR_URL", "ecr:${REGION}:${FPT_ACR_CREDENTIALS}") {
-                      docker.image("$FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER ").push()
+                    docker.withRegistry("https://${FPT_ACR_URL}", "ecr:${REGION}:${FPT_ACR_CREDENTIALS}") {
+                      docker.image("$FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER").push()
                       docker.image("$FPT_ACR_URL/$SERVICE_NAME:latest").push()
                     }
 
