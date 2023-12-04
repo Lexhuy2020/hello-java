@@ -29,7 +29,7 @@ pipeline {
 
         stage("push Image") {
             steps {
-                sh "docker push $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER"
+           //     sh "docker push $FPT_ACR_URL/$SERVICE_NAME:${COMMIT_HASH}_$BUILD_NUMBER"
     //             script {
     //      try {
     //          sh 'aws ecr batch-delete-image --repository-name testecr --image-ids imageTag=latest -y'
