@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        FPT_ACR_CREDENTIALS = {ECR-ACCESS-KEY}
+        FPT_ACR_CREDENTIALS = credentials('ECR-ACCESS-KEY')
         FPT_ACR_URL = "563958919552.dkr.ecr.ap-northeast-2.amazonaws.com/testecr"
         FPT_ACR_NAME = "testecr"
         REGION = "ap-northeast-2"
