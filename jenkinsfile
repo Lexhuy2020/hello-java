@@ -13,12 +13,6 @@ pipeline {
 
     stages {
         
-        stage("build image") {
-            steps {
-                sh "docker build -t $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
-                sh "docker tag $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER $FPT_ACR_URL:latest" 
-            }
-        }
          stage('login ECR') {
             steps {
                 script{
@@ -26,7 +20,12 @@ pipeline {
                 }
             }
          }
-
+        stage("build image") {
+            steps {
+                sh "docker build -t $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
+                sh "docker tag $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER $FPT_ACR_URL:latest" 
+            }
+        }    
         stage("push Image") {
             steps {
                sh "docker push $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER"
