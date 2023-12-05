@@ -20,26 +20,26 @@ pipeline {
                 }
             }
          }
-        stage("build image") {
-            steps {
-                sh "docker build -t $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
-                sh "docker tag $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER $FPT_ACR_URL:latest" 
-            }
-        }    
-        stage("push Image") {
-            steps {
-               sh "docker push $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER"
-                script {
-         try {
-             sh 'aws ecr batch-delete-image --repository-name testecr --image-ids imageTag=latest'
-         } catch (Exception e) {
-             println "ACR remove execution FAILED: ${e.getMessage()} --> SKIP Remove ACR"
-             currentBuild.result = 'SUCCESS'
-         }
-      }
-                sh "docker push $FPT_ACR_URL:latest"             
-            }
-        }
+    //     stage("build image") {
+    //         steps {
+    //             sh "docker build -t $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
+    //             sh "docker tag $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER $FPT_ACR_URL:latest" 
+    //         }
+    //     }    
+    //     stage("push Image") {
+    //         steps {
+    //            sh "docker push $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER"
+    //             script {
+    //      try {
+    //          sh 'aws ecr batch-delete-image --repository-name testecr --image-ids imageTag=latest'
+    //      } catch (Exception e) {
+    //          println "ACR remove execution FAILED: ${e.getMessage()} --> SKIP Remove ACR"
+    //          currentBuild.result = 'SUCCESS'
+    //      }
+    //   }
+    //             sh "docker push $FPT_ACR_URL:latest"             
+    //         }
+    //     }
         
         stage("Deploy to aks") {
             steps {
@@ -52,7 +52,7 @@ pipeline {
       
             post {
                 always {
-                   sh 'docker rmi $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER'
+                   //sh 'docker rmi $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER '
                    sh 'docker images'               
                 }
             }
