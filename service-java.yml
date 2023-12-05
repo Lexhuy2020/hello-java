@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: service-java-app
-  namespace: test
+  namespace: mytest
 spec:
   type: LoadBalancer
   ports:

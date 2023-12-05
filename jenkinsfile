@@ -40,20 +40,14 @@ pipeline {
                 sh "docker push $FPT_ACR_URL:latest"             
             }
         }
-        //  stage("check images pushed") {
-        //     steps {
-        //         //show tag of repository name in ACR
-        //         sh"az acr repository show-tags --name $FPT_ACR_NAME --repository $SERVICE_NAME --output table"
-        //         //sh"az acr repository list --name $FPT_ACR_NAME --output table"              
-        //     }
-        // }
-        // stage("Deploy to aks") {
-        //     steps {
-        //         sh('kubectl config use-context $AKS_CLUSTER_NAME')
-        //         sh('kubectl apply -f deployment_java.yml')
-        //         sh('kubectl apply -f service-java.yml')
-        //     }
-        // }
+        
+        stage("Deploy to aks") {
+            steps {
+                //sh('kubectl config use-context $AKS_CLUSTER_NAME')
+                sh('kubectl apply -f deployment_java.yml')
+                sh('kubectl apply -f service-java.yml')
+            }
+        }
 }
       
             post {

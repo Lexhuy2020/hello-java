@@ -31,7 +31,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: java-app
-  namespace: test
+  namespace: mytest
 spec:
   replicas: 3
   selector:
