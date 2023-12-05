@@ -44,6 +44,6 @@ spec:
     spec:
       containers:
       - name: java-app
-        image: fptamsdevacr.azurecr.io/java:latest
+        image: 563958919552.dkr.ecr.ap-northeast-2.amazonaws.com/testecr:latest
         ports:
         - containerPort: 5000
