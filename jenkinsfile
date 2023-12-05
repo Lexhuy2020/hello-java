@@ -32,7 +32,7 @@ pipeline {
                sh "docker push $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER"
                 script {
          try {
-             sh 'aws ecr batch-delete-image --repository-name testecr --image-ids imageTag=latest -y'
+             sh 'aws ecr batch-delete-image --repository-name testecr --image-ids imageTag=latest'
          } catch (Exception e) {
              println "ACR remove execution FAILED: ${e.getMessage()} --> SKIP Remove ACR"
              currentBuild.result = 'SUCCESS'
