@@ -1,4 +1,4 @@
-# apiVersion: apps/v1
+lo# apiVersion: apps/v1
 # kind: Deployment
 
 # metadata:
@@ -44,6 +44,6 @@ spec:
     spec:
       containers:
       - name: java-app
-        image: 563958919552.dkr.ecr.ap-northeast-2.amazonaws.com/testecr:latest
+        image: hello-java:latest
         ports:
         - containerPort: 5000
