@@ -16,7 +16,7 @@ pipeline {
          stage('Test') {
             steps {
                 script{
-                sh "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $FPT_ACR_URL"   
+                sh "mvn clean test"   
                 }
             }
          }
