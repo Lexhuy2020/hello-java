@@ -13,19 +13,19 @@ pipeline {
 
     stages {
         
-         stage('login ECR') {
+         stage('Test') {
             steps {
                 script{
                 sh "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $FPT_ACR_URL"   
                 }
             }
          }
-    //     stage("build image") {
-    //         steps {
-    //             sh "docker build -t $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
-    //             sh "docker tag $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER $FPT_ACR_URL:latest" 
-    //         }
-    //     }    
+         stage("build image") {
+             steps {
+                 sh "docker build -t hello-java:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
+                 sh "docker tag hello-java:${COMMIT_HASH}_$BUILD_NUMBER hello-java:latest" 
+             }
+         }    
     //     stage("push Image") {
     //         steps {
     //            sh "docker push $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER"
