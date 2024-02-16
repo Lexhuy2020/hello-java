@@ -8,7 +8,7 @@ pipeline {
         //REGION = "ap-northeast-2"
         COMMIT_HASH = sh(script: 'git rev-parse --short  HEAD', returnStdout: true).trim()
         SERVICE_NAME = "java"
-        AKS_CLUSTER_NAME = "fpt-ams-dev"
+        AKS_CLUSTER_NAME = "minikube"
     }
 
     stages {
@@ -20,10 +20,11 @@ pipeline {
                 }
             }
          }
-         stage("build image") {
+         stage("build and push image to repo") {
              steps {
                  sh "docker build -t hello-java:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
-                 sh "docker tag hello-java:${COMMIT_HASH}_$BUILD_NUMBER hello-java:latest" 
+                 sh "docker tag hello-java:${COMMIT_HASH}_$BUILD_NUMBER huylx3/hello-java:latest"
+                 sh "docker push hello-java:${COMMIT_HASH}_$BUILD_NUMBER huylx3/hello-java:latest"
              }
          }    
     //     stage("push Image") {
@@ -40,12 +41,10 @@ pipeline {
     //             sh "docker push $FPT_ACR_URL:latest"             
     //         }
     //     }
-        
-        stage("Deploy to aks") {
+        stage("Deploy to minikube") {
             steps {
-                //sh('kubectl config use-context $AKS_CLUSTER_NAME')
+                sh('kubectl config use-context $AKS_CLUSTER_NAME')
                 sh('kubectl apply -f deployment_java.yml')
-                sh('kubectl apply -f service-java.yml')
             }
         }
 }
