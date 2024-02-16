@@ -44,6 +44,6 @@ spec:
     spec:
       containers:
       - name: java-app
-        image: hello-java:latest
+        image: huylx3/hello-java:latest
         ports:
         - containerPort: 5000
