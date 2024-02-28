@@ -15,7 +15,7 @@
 #    spec:
 #     container: 
 #     - name: hello-java
-#       image:  fptamsdevacr.azurecr.io/java:latest
+#       image:  
 #       ports:
 #       - containerPort: 5000
 #       resources:
