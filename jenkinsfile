@@ -51,7 +51,7 @@ pipeline {
       
             post {
                 always {
-                   sh 'docker rmi $FPT_ACR_URL:${COMMIT_HASH}_$BUILD_NUMBER '
+                   sh 'docker rmi hello-java:${COMMIT_HASH}_$BUILD_NUMBER'
                    sh 'docker images'               
                 }
             }
