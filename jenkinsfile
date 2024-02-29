@@ -24,7 +24,7 @@ pipeline {
              steps {
                  sh "docker build -t hello-java:${COMMIT_HASH}_$BUILD_NUMBER -f Dockerfile ."
                  sh "docker tag hello-java:${COMMIT_HASH}_$BUILD_NUMBER huylx3/hello-java:latest"
-                 sh "docker push huylx3/hello-java:latest huylx3/hello-java:latest"
+                 sh "docker huylx3/hello-java:latest"
              }
          }    
     //     stage("push Image") {
